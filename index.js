@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 const cors = require('cors');
 const app = express();
 
@@ -41,6 +41,16 @@ async function run() {
       const result = await brandCollection.insertOne(product)
       console.log(result);
       res.send(result)
+    })
+    app.get('/addProduct', async(req, res) =>{
+      const result = await brandCollection.find().toArray()
+      res.send(result)
+    })
+    app.get('/addProduct/:id', async(req, res)=>{
+      const id = req.params.id
+      const query =  {_id: new ObjectId(id)}
+     const result = await brandCollection.findOne(query)
+     res.send(result)
     })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
