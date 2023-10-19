@@ -29,17 +29,39 @@ async function run() {
     await client.connect();
 
     const brandCollection = client.db("brandDB").collection('brand')
-    // const productCollection = client.db("productDB").collection('product')
-    // app.get('/addProduct', async(req, res) =>{
-    //   const cursor = brandCollection.find()
-    //   const result = await cursor.toArray()
-    //   res.send(result)
-    // })
-
+    const productCollection = client.db("brandDB").collection('brands')
+    const brandCardCollection = client.db("brandDB").collection('brandsCard')
+    app.get('/brands', async(req, res) =>{
+      const result = await productCollection.find().toArray()
+      res.send(result)
+    })
+    app.get('/brandsCard', async(req, res) =>{
+      const result = await brandCardCollection.find().toArray()
+      res.send(result)
+    })
     app.post('/addProduct', async(req, res) =>{
       const product = req.body
       const result = await brandCollection.insertOne(product)
       console.log(result);
+      res.send(result)
+    })
+    app.put('/addProduct/:id', async(req,res) =>{
+      const id = req.params.id
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert: true}
+      const updatedProduct = req.body
+      const product = {
+        $set:{
+            name: updatedProduct.name,
+            brand: updatedProduct.brand,
+            photo: updatedProduct.photo,
+            type: updatedProduct.type,
+            description: updatedProduct.description,
+            price: updatedProduct.price,
+            rating: updatedProduct.rating
+        }
+      }
+      const result = await brandCollection.updateOne(filter, product, options )
       res.send(result)
     })
     app.get('/addProduct', async(req, res) =>{
@@ -61,9 +83,8 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
 app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+  res.send('CRUD is running')
+})
 
  app.listen(port, () => console.log(`Example app listening on port ${port}!`));
