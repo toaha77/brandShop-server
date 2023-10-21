@@ -26,27 +26,32 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const brandCollection = client.db("brandDB").collection('brand')
     const productCollection = client.db("brandDB").collection('brands')
     const brandCardCollection = client.db("brandDB").collection('brandsCard')
-    app.get('/brands', async(req, res) =>{
+    app.get('/brands/:id', async(req, res) =>{
       const result = await productCollection.find().toArray()
       res.send(result)
     })
-    // app.get('/filters', async(req, res) =>{
-    //   const result = await brandCardCollection.find({brand_name: 'BMW'}).toArray()
+   
+    
+    // app.get('/brandsCard', async(req, res) =>{
+    //   const brands = 
+    //     {
+    //       brand_name: 'BMW'
+    //     }
+      
+    //   const result = await brandCardCollection.find(brands).toArray()
     //   res.send(result)
     // })
-    app.get('/brandsCard', async(req, res) =>{
-      const brands = {
-        'brands_name' : 'BMW',
-        
-      }
-      const result = await brandCardCollection.find(brands).toArray()
-      res.send(result)
-    })
+    // app.get('/brandsCard', async(req, res) =>{
+    //    const brand = req.params.brand
+    //    const query = {brand_name: brand}
+    //   const result = await brandCardCollection.find(query).toArray()
+    //   res.send(result)
+    // })
     app.post('/addProduct', async(req, res) =>{
       const product = req.body
       const result = await brandCollection.insertOne(product)
@@ -83,7 +88,7 @@ async function run() {
      res.send(result)
     })
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
