@@ -35,8 +35,19 @@ async function run() {
       const result = await productCollection.find().toArray()
       res.send(result)
     })
-    app.get('/brandsCard', async(req, res) =>{
-      const result = await brandCardCollection.find().toArray()
+    // app.get('/filters', async(req, res) =>{
+    //   const result = await brandCardCollection.find({brand_name: 'BMW'}).toArray()
+    //   res.send(result)
+    // })
+    app.get('details/brandsCard', async(req, res) =>{
+      const brands = {
+        'brands_name' : 'BMW',
+        'brands_name' : 'Toyota',
+        'brands_name' : 'Tesla',
+        'brands_name' : 'Ford',
+        'brands_name' : 'Marcedez-Benz'
+      }
+      const result = await brandCardCollection.find(brands).toArray()
       res.send(result)
     })
     app.post('/addProduct', async(req, res) =>{
