@@ -31,31 +31,30 @@ async function run() {
     const brandCollection = client.db("brandDB").collection('brand')
     const productCollection = client.db("brandDB").collection('brands')
     const brandCardCollection = client.db("brandDB").collection('brandsCard')
-    app.get('/brands/:id', async(req, res) =>{
+    app.get('/brands', async(req, res) =>{
       const result = await productCollection.find().toArray()
       res.send(result)
     })
    
     
-    // app.get('/brandsCard', async(req, res) =>{
-    //   const brands = 
-    //     {
-    //       brand_name: 'BMW'
-    //     }
-      
-    //   const result = await brandCardCollection.find(brands).toArray()
-    //   res.send(result)
-    // })
-    // app.get('/brandsCard', async(req, res) =>{
-    //    const brand = req.params.brand
-    //    const query = {brand_name: brand}
-    //   const result = await brandCardCollection.find(query).toArray()
-    //   res.send(result)
-    // })
+    app.get('/brandsCard/:brand', async(req, res) =>{
+      const brands = 
+        {
+          brand_name: req.params.brand
+        }
+      console.log(brands);
+      const result = await brandCardCollection.find(brands).toArray()
+      res.send(result)
+    })
+    
     app.post('/addProduct', async(req, res) =>{
       const product = req.body
       const result = await brandCollection.insertOne(product)
       console.log(result);
+      res.send(result)
+    })
+    app.get('/addProduct', async(req, res) =>{
+      const result = await brandCollection.find().toArray()
       res.send(result)
     })
     app.put('/addProduct/:id', async(req,res) =>{
@@ -77,10 +76,7 @@ async function run() {
       const result = await brandCollection.updateOne(filter, product, options )
       res.send(result)
     })
-    app.get('/addProduct', async(req, res) =>{
-      const result = await brandCollection.find().toArray()
-      res.send(result)
-    })
+
     app.get('/addProduct/:id', async(req, res)=>{
       const id = req.params.id
       const query =  {_id: new ObjectId(id)}
