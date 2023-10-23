@@ -27,10 +27,10 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
-
-    const brandCollection = client.db("brandDB").collection('brand')
+ 
     const productCollection = client.db("brandDB").collection('brands')
     const brandCardCollection = client.db("brandDB").collection('brandsCard')
+    
     app.get('/brands', async(req, res) =>{
       const result = await productCollection.find().toArray()
       res.send(result)
@@ -46,18 +46,15 @@ async function run() {
       const result = await brandCardCollection.find(brands).toArray()
       res.send(result)
     })
-    
-    app.post('/addProduct', async(req, res) =>{
+ 
+ 
+    app.post('/brandsCard', async(req, res) =>{
       const product = req.body
-      const result = await brandCollection.insertOne(product)
+      const result = await brandCardCollection.insertOne(product)
       console.log(result);
       res.send(result)
     })
-    app.get('/addProduct', async(req, res) =>{
-      const result = await brandCollection.find().toArray()
-      res.send(result)
-    })
-    app.put('/addProduct/:id', async(req,res) =>{
+    app.put('/brandsCard/:id', async(req,res) =>{
       const id = req.params.id
       const filter = {_id: new ObjectId(id)}
       const options = {upsert: true}
@@ -73,14 +70,17 @@ async function run() {
             rating: updatedProduct.rating
         }
       }
-      const result = await brandCollection.updateOne(filter, product, options )
+      const result = await brandCardCollection.updateOne(filter, product, options )
       res.send(result)
     })
-
-    app.get('/addProduct/:id', async(req, res)=>{
+    // app.get('/brandsCard/:id', async(req, res) =>{
+    //   const result = await brandCardCollection.find().toArray()
+    //   res.send(result)
+    // })
+    app.get('/brandsCard/:id', async(req, res)=>{
       const id = req.params.id
       const query =  {_id: new ObjectId(id)}
-     const result = await brandCollection.findOne(query)
+     const result = await brandCardCollection.findOne(query)
      res.send(result)
     })
     // Send a ping to confirm a successful connection
